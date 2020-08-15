@@ -27,7 +27,7 @@ function LoginOAuth () {
         const expireDate = Date.now() + expire * 1000 - 30000 // 30000ms network latency
         window.localStorage.setItem('token-expire', expireDate)
 
-        allActions.app.appMakeAuth({ user, token, tokenType: 'oauth2.0' })(dispatch)
+        allActions.app.makeAuth({ user, token, tokenType: 'oauth2.0' })(dispatch)
       } catch (err) {
         window.alert(err.message || 'Server Error')
       }

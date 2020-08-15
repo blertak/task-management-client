@@ -1,18 +1,18 @@
-import { APP_CLEAR_AUTH, APP_MAKE_AUTH } from './constants'
+import { CLEAR_AUTH, MAKE_AUTH } from './constants'
 
-export const appMakeAuth = ({ user, token, tokenType }) => {
+export const makeAuth = ({ user, token, tokenType }) => {
   return (dispatch) => {
     dispatch({
-      type: APP_MAKE_AUTH,
+      type: MAKE_AUTH,
       value: { user, token, tokenType }
     })
   }
 }
 
-export const appClearAuth = () => {
+export const clearAuth = () => {
   return (dispatch) => {
     dispatch({
-      type: APP_CLEAR_AUTH
+      type: CLEAR_AUTH
     })
   }
 }

@@ -1,7 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import { Button, TextField, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core'
+import UserService from '../../services/UserService'
+import { clearAuthStorage } from '../../helpers/util'
+
+// Redux functionality
+import allActions from '../../store/actions'
 
 // Components
 import SimpleTable from '../../components/Tables/SimpleTable'
@@ -59,34 +65,43 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const rows = [
-  {
-    _id: '1',
-    email: 'wrerer',
-    role: 'user'
-  },
-  {
-    _id: '2',
-    email: 'wrerer',
-    role: 'user'
-  },
-  {
-    _id: '3',
-    email: 'erer',
-    role: 'user'
-  },
-  {
-    _id: '4',
-    email: 'wrerer',
-    role: 'admin'
-  }
-]
-
-const cols = ['Id', 'Email', 'Role']
+const userService = new UserService()
 
 function Users () {
+  const cols = ['Id', 'Email', 'Role']
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
+
+  const appState = useSelector(state => state.app)
+  const usersState = useSelector(state => state.users)
+  const dispatch = useDispatch()
+  console.log(appState)
+
+  useEffect(() => {
+    if (!userService.httpClient) {
+      userService.setToken(appState.token, appState.tokenType)
+    }
+
+    const tokenExpire = +window.localStorage.getItem('token-expire')
+    if (Date.now() > tokenExpire) {
+      clearAuthStorage()
+      allActions.app.clearAuth()(dispatch)
+      return
+    }
+
+    (async () => {
+      try {
+        const res = await userService.listUsers()
+        allActions.users.setUsers(res)(dispatch)
+      } catch (err) {
+        window.alert(err.message || 'Server Error')
+        if (err.message === 'ERR_AUTH_TOKEN_EXPIRED') {
+          clearAuthStorage()
+          allActions.app.clearAuth()(dispatch)
+        }
+      }
+    })()
+  }, [appState, dispatch])
 
   const handleOpen = () => {
     setOpen(true)
@@ -142,7 +157,7 @@ function Users () {
         </CostumizedModal>
         <SimpleTable
           modalHeading='Edit user'
-          rows={rows}
+          rows={usersState.entries}
           cols={cols}
         >
           <form className={classes.root} noValidate autoComplete='off'>

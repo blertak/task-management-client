@@ -80,7 +80,7 @@ function Login () {
       const expireDate = Date.now() + expire * 1000 - 30000 // 30000ms network latency
       window.localStorage.setItem('token-expire', expireDate)
 
-      allActions.app.appMakeAuth({ user, token, tokenType: 'jwt' })(dispatch)
+      allActions.app.makeAuth({ user, token, tokenType: 'jwt' })(dispatch)
     } catch (err) {
       window.alert(err.message || 'Invalid credentials')
     }
