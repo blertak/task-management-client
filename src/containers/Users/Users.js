@@ -75,7 +75,6 @@ function Users () {
   const appState = useSelector(state => state.app)
   const usersState = useSelector(state => state.users)
   const dispatch = useDispatch()
-  console.log(appState)
 
   useEffect(() => {
     if (!userService.httpClient) {

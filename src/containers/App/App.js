@@ -24,7 +24,6 @@ class App extends Component {
   render () {
     const isAuth = !!this.props.app.user
     const role = isAuth ? this.props.app.user.role : ''
-    console.log(this.props.app)
 
     return (
       <div>
