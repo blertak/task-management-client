@@ -86,7 +86,6 @@ const cols = ['Id', 'Email', 'Role']
 
 function Users () {
   const classes = useStyles()
-  console.log('rows', rows)
   const [open, setOpen] = React.useState(false)
 
   const handleOpen = () => {

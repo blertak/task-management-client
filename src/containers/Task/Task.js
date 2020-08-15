@@ -75,7 +75,6 @@ const cols = ['Name', 'Date', 'Duration']
 
 function Task () {
   const classes = useStyles()
-  console.log('rows', rows)
   const [open, setOpen] = React.useState(false)
 
   const handleOpen = () => {

@@ -1,15 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
+import { useDispatch } from 'react-redux'
 import Container from '@material-ui/core/Container'
+import AuthService from '../../services/AuthService'
+import config from '../../config/config.json'
+
+// Redux functionality
+import allActions from '../../store/actions'
 
 // assets
 import githubIcon from '../../assets/images/icons/github.svg'
 import googleIcon from '../../assets/images/icons/google.svg'
+
+const authService = new AuthService()
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -53,6 +61,30 @@ const useStyles = makeStyles((theme) => ({
 
 function Login () {
   const classes = useStyles()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const dispatch = useDispatch()
+
+  const submitLogin = async (e) => {
+    e.preventDefault()
+
+    try {
+      const { token, expire } = await authService.login(email, password)
+      const user = await authService.getUserInfo(token, 'jwt')
+
+      window.localStorage.setItem('user', JSON.stringify(user))
+      window.localStorage.setItem('token', token)
+      window.localStorage.setItem('token-type', 'jwt')
+
+      const expireDate = Date.now() + expire * 1000 - 30000 // 30000ms network latency
+      window.localStorage.setItem('token-expire', expireDate)
+
+      allActions.app.appMakeAuth({ user, token, tokenType: 'jwt' })(dispatch)
+    } catch (err) {
+      window.alert(err.message || 'Invalid credentials')
+    }
+  }
 
   return (
     <div className='App'>
@@ -75,6 +107,7 @@ function Login () {
               name='email'
               autoComplete='email'
               autoFocus
+              onChange={(e) => setEmail(e.target.value)}
             />
             <TextField
               variant='outlined'
@@ -86,6 +119,7 @@ function Login () {
               type='password'
               id='password'
               autoComplete='current-password'
+              onChange={(e) => setPassword(e.target.value)}
             />
             <Button
               type='submit'
@@ -93,6 +127,7 @@ function Login () {
               variant='contained'
               color='primary'
               className={classes.login}
+              onClick={submitLogin}
             >
               Log In
             </Button>
@@ -100,8 +135,7 @@ function Login () {
               <Button
                 className={classes.socialLogin}
                 color='default'
-                href='#pablo'
-                onClick={e => e.preventDefault()}
+                onClick={() => window.open(config.githubLogin, '_self')}
               >
                 <span className='btn-inner--icon'>
                   <img
@@ -115,8 +149,7 @@ function Login () {
               <Button
                 className={classes.socialLogin}
                 color='default'
-                href='#pablo'
-                onClick={e => e.preventDefault()}
+                onClick={() => window.open(config.googleLogin, '_self')}
               >
                 <span className='btn-inner--icon'>
                   <img

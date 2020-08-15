@@ -1,0 +1,5 @@
+{
+  "apiUrl": "http://localhost:4000/api",
+  "googleLogin": "http://localhost:4000/api/auth/google",
+  "githubLogin": "http://localhost:4000/api/auth/github"
+}

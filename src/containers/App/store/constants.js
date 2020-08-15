@@ -1,0 +1,7 @@
+const APP_CLEAR_AUTH = 'APP_CLEAR_AUTH'
+const APP_MAKE_AUTH = 'APP_MAKE_AUTH'
+
+module.exports = {
+  APP_CLEAR_AUTH,
+  APP_MAKE_AUTH
+}
