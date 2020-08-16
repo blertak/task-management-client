@@ -17,6 +17,7 @@ import LoginOAuth from '../Login/LoginOAuth'
 import Logout from '../Logout/Logout'
 import Task from '../Task/Task'
 import Users from '../Users/Users'
+import ResetPassword from '../ResetPassword/ResetPassword'
 import RedirectIfAuthorized from '../../components/Routes/RedirectIfAuthorized'
 import RedirectUnauthorized from '../../components/Routes/RedirectUnauthorized'
 
@@ -24,11 +25,12 @@ class App extends Component {
   render () {
     const isAuth = !!this.props.app.user
     const role = isAuth ? this.props.app.user.role : ''
+    const oauthType = !isAuth ? null : this.props.app.tokenType
 
     return (
       <div>
         <Router>
-          <Navigation isAuth={isAuth} role={role} />
+          <Navigation isAuth={isAuth} role={role} oauthType={oauthType} />
           <div className='container'>
             <Switch>
               <RedirectIfAuthorized
@@ -58,6 +60,13 @@ class App extends Component {
                 isAuth={isAuth}
                 {...this.props}
                 component={Logout}
+              />
+              <RedirectUnauthorized
+                path='/reset-password' exact
+                redirectTo='/login'
+                isAuth={isAuth}
+                {...this.props}
+                component={ResetPassword}
               />
               <RedirectUnauthorized
                 path='/tasks' exact

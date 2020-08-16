@@ -5,10 +5,14 @@ import TextField from '@material-ui/core/TextField'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Container from '@material-ui/core/Container'
 import AuthService from '../../services/AuthService'
 
+// Helpers
+import { clearAuthStorage } from '../../helpers/util'
+
+// Redux functionality
 import allActions from '../../store/actions'
 
 const authService = new AuthService()
@@ -39,32 +43,24 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function Register () {
+function ResetPassword () {
   const classes = useStyles()
-  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [comfirmPwd, setComfirmPwd] = useState('')
 
   const dispatch = useDispatch()
+  const appState = useSelector(state => state.app)
 
-  const submitRegister = async (e) => {
+  const submitResetPassword = async (e) => {
     e.preventDefault()
 
     try {
       if (comfirmPwd === password) {
-        const { token, expire } = await authService.register(email, password)
-        const user = await authService.getUserInfo(token, 'jwt')
-
-        window.localStorage.setItem('user', JSON.stringify(user))
-        window.localStorage.setItem('token', token)
-        window.localStorage.setItem('token-type', 'jwt')
-
-        const expireDate = Date.now() + expire * 1000 - 30000 // 30000ms network latency
-        window.localStorage.setItem('token-expire', expireDate)
-
-        allActions.app.makeAuth({ user, token, tokenType: 'jwt' })(dispatch)
+        await authService.resetPassword(appState.token, password)
+        clearAuthStorage()
+        allActions.app.clearAuth()(dispatch)
       } else {
-        window.alert('password and cmfirm password must match')
+        window.alert('password and comfirm password must match')
       }
     } catch (err) {
       window.alert(err.message || 'Invalid credentials')
@@ -79,26 +75,9 @@ function Register () {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component='h1' variant='h5'>
-            Register
+            Reset Password
           </Typography>
           <form className={classes.form} autoComplete='off'>
-            <TextField
-              variant='outlined'
-              margin='normal'
-              required
-              fullWidth
-              id='email'
-              label='Email Address'
-              name='email'
-              inputProps={{
-                autocomplete: 'email',
-                form: {
-                  autocomplete: 'off'
-                }
-              }}
-              autoFocus
-              onChange={(e) => setEmail(e.target.value)}
-            />
             <TextField
               variant='outlined'
               margin='normal'
@@ -127,9 +106,9 @@ function Register () {
               variant='contained'
               color='primary'
               className={classes.register}
-              onClick={submitRegister}
+              onClick={submitResetPassword}
             >
-              Register
+              Reset Password
             </Button>
           </form>
         </div>
@@ -138,4 +117,4 @@ function Register () {
   )
 }
 
-export default Register
+export default ResetPassword

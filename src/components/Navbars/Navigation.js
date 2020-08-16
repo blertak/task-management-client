@@ -8,6 +8,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd'
 import GroupIcon from '@material-ui/icons/Group'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import LockIcon from '@material-ui/icons/Lock'
 
 import { Link, withRouter } from 'react-router-dom'
 
@@ -77,6 +78,16 @@ function Navigation (props) {
         <span className={classes.ButtonText}>Tasks</span>
       </Link>
     )
+
+    if (props.oauthType === 'jwt') {
+      links.push(
+        <Link key='reset-password' className={classes.navLink} to='/reset-password'>
+          <LockIcon fontSize='small' />
+          <span className={classes.ButtonText}>Reset Password</span>
+        </Link>
+      )
+    }
+
     links.push(
       <Link key='logout' className={classes.navLink} to='/logout'>
         <ExitToAppIcon fontSize='small' />
