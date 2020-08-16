@@ -132,34 +132,38 @@ function Login () {
               Log In
             </Button>
             <div className={classes.socialLoginContainer}>
-              <Button
-                className={classes.socialLogin}
-                color='default'
-                onClick={() => window.open(config.githubLogin, '_self')}
-              >
-                <span className='btn-inner--icon'>
-                  <img
-                    alt='...'
-                    src={githubIcon}
-                    className={classes.imgIcon}
-                  />
-                </span>
-                <span className='btn-inner--text'>Github</span>
-              </Button>
-              <Button
-                className={classes.socialLogin}
-                color='default'
-                onClick={() => window.open(config.googleLogin, '_self')}
-              >
-                <span className='btn-inner--icon'>
-                  <img
-                    alt='...'
-                    src={googleIcon}
-                    className={classes.imgIcon}
-                  />
-                </span>
-                <span className='btn-inner--text'>Google</span>
-              </Button>
+              {config.githubLogin && (
+                <Button
+                  className={classes.socialLogin}
+                  color='default'
+                  onClick={() => window.open(config.githubLogin, '_self')}
+                >
+                  <span className='btn-inner--icon'>
+                    <img
+                      alt='...'
+                      src={githubIcon}
+                      className={classes.imgIcon}
+                    />
+                  </span>
+                  <span className='btn-inner--text'>Github</span>
+                </Button>
+              )}
+              {config.googleLogin && (
+                <Button
+                  className={classes.socialLogin}
+                  color='default'
+                  onClick={() => window.open(config.googleLogin, '_self')}
+                >
+                  <span className='btn-inner--icon'>
+                    <img
+                      alt='...'
+                      src={googleIcon}
+                      className={classes.imgIcon}
+                    />
+                  </span>
+                  <span className='btn-inner--text'>Google</span>
+                </Button>
+              )}
 
             </div>
           </form>
