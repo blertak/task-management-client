@@ -13,6 +13,9 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import { Button } from '@material-ui/core'
 
 const useStyles = makeStyles({
+  root: {
+    marginBottom: '2rem'
+  },
   table: {
     minWidth: 650
   },
@@ -26,6 +29,11 @@ const useStyles = makeStyles({
   heading: {
     textTransform: 'uppercase',
     fontWeight: 'normal'
+  },
+  column: {
+    textTransform: 'uppercase',
+    fontWeight: '600',
+    color: '#002b9a'
   }
 })
 
@@ -34,12 +42,12 @@ function SimpleTable (props) {
 
   return (
     <>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} className={classes.root}>
         <Table className={classes.table} aria-label='caption table'>
           <TableHead>
             <TableRow>
               {props.cols.map((col, i) => (
-                <TableCell key={i} component='th'>{col}</TableCell>
+                <TableCell className={classes.column} key={i} component='th'>{col}</TableCell>
               ))}
               <TableCell />
             </TableRow>
