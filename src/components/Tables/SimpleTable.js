@@ -12,9 +12,6 @@ import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Button } from '@material-ui/core'
 
-// Components
-import CostumizedModal from '../Modals/CostumizedModal/CostumizedModal'
-
 const useStyles = makeStyles({
   table: {
     minWidth: 650
@@ -35,16 +32,6 @@ const useStyles = makeStyles({
 function SimpleTable (props) {
   const classes = useStyles()
 
-  const [open, setOpen] = React.useState(false)
-
-  const handleOpen = () => {
-    setOpen(true)
-  }
-
-  const handleClose = () => {
-    setOpen(false)
-  }
-
   return (
     <>
       <TableContainer component={Paper}>
@@ -60,17 +47,17 @@ function SimpleTable (props) {
           <TableBody>
             {props.rows.map((row, i) => (
               <TableRow key={i}>
-                {_.map(row, (val, key) => <TableCell key={key} component='td' scope='row'>{val}</TableCell>)}
+                {_.map(_.pick(row, props.fields), (val, key) => <TableCell key={key} component='td' scope='row'>{val}</TableCell>)}
                 <TableCell align='right'>
                   <Button
                     className={classes.actionButton}
-                    onClick={handleOpen}
+                    onClick={() => props.editHandle(row)}
                   >
                     <EditIcon fontSize='small' />
                   </Button>
                   <Button
                     className={classes.actionButton}
-                    onClick={() => console.log('not implemented')}
+                    onClick={() => props.deleteHandle(row)}
                   >
                     <DeleteIcon fontSize='small' />
                   </Button>
@@ -80,15 +67,6 @@ function SimpleTable (props) {
           </TableBody>
         </Table>
       </TableContainer>
-      <CostumizedModal
-        open={open}
-        handleClose={handleClose}
-      >
-        <div>
-          <h2 className={classes.heading}>{props.modalHeading}</h2>
-          {props.children}
-        </div>
-      </CostumizedModal>
     </>
   )
 }
